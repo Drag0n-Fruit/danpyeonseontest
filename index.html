@@ -997,7 +997,7 @@
 
         // ---------- GATE 5 : 최후의 문 (파편 회피 생존) ----------
         function renderStage5() {
-          const SURVIVE_MS = 10000; // 생존 목표 시간
+          const SURVIVE_MS = 14000; // 생존 목표 시간
           let running = false;
           let startTime = 0;
           let lastFrame = 0;
@@ -1101,7 +1101,7 @@
             }
 
             spawnTimer -= dt;
-            const spawnInterval = Math.max(1, 620 - progress * 690);
+            const spawnInterval = Math.max(1, 620 - progress * 6.90);
             if (spawnTimer <= 0) {
               spawnObstacle();
               spawnTimer = spawnInterval;

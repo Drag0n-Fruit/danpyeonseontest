@@ -804,7 +804,7 @@
 
         // ---------- GATE 3 : 찰나의 문 (정밀 타이밍) ----------
         function renderStage3() {
-          const NEED_STREAK = 4;
+          const NEED_STREAK = 3;
           let streak = 0;
           let raf = null;
           let pos = 0;
@@ -909,7 +909,7 @@
         // ---------- GATE 4 : 반응의 문 (반응 속도) ----------
         function renderStage4() {
           const NEED = 3;
-          const THRESHOLD = 300; // ms
+          const THRESHOLD = 400; // ms
           let streak = 0;
           let phase = 'idle'; // idle | waiting | go | done
           let goTime = 0;

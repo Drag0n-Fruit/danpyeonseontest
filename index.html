@@ -576,7 +576,7 @@
 
         // ---------- GATE 1 : 기억의 문 (패턴 시퀀스) ----------
         function renderStage1() {
-          const TARGET_LEN = 8;
+          const TARGET_LEN = 5;
           const symbols = ['◆', '●', '▲', '■'];
           let sequence = [];
           let userIdx = 0;
@@ -619,7 +619,7 @@
           async function playSequence() {
             accepting = false;
             status.innerHTML = `재생 중... 현재 단계: <b>${sequence.length}</b> / ${TARGET_LEN}`;
-            const speed = Math.max(75, 560 - sequence.length * 120);
+            const speed = Math.max(65, 560 - sequence.length * 120);
             await new Promise(r => setTimeout(r, 400));
             for (const i of sequence) {
               await light(i, speed);

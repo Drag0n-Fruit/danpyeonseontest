@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+  <html lang="ko">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>봉인 해제 :: 클로드딸깍</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&family=Inter:wght@400;500;700&display=swap');
+
+      :root {
+        --bg: #0a0a0a;
+        --bg-soft: #131313;
+        --ink: #f2f0e8;
+        --ink-dim: #8a887f;
+        --yellow: #00f3a6;
+        --yellow-dim: #0c3c17;
+        --line: #2a2a26;
+        --danger: #ff4d4d;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        min-height: 100%;
+        background:
+          radial-gradient(ellipse at 50% -10%, #1a1a12 0%, var(--bg) 55%),
+          var(--bg);
+        color: var(--ink);
+        font-family: 'Inter', sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .wrap {
+        max-width: 640px;
+        margin: 0 auto;
+        padding: 64px 24px 96px;
+        min-height: 100vh;
+      }
+
+      header {
+        text-align: center;
+        margin-bottom: 48px;
+      }
+
+      .eyebrow {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 12px;
+        letter-spacing: 0.35em;
+        color: var(--yellow-dim);
+        text-transform: uppercase;
+        margin-bottom: 14px;
+      }
+
+      h1 {
+        font-family: 'JetBrains Mono', monospace;
+        font-weight: 800;
+        font-size: clamp(28px, 6vw, 40px);
+        letter-spacing: -0.01em;
+        margin: 0 0 10px;
+      }
+
+      h1 span {
+        color: var(--yellow);
+      }
+
+      .sub {
+        color: var(--ink-dim);
+        font-size: 14px;
+        line-height: 1.6;
+        max-width: 460px;
+        margin: 0 auto;
+      }
+
+      /* progress */
+      .progress {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 36px 0 8px;
+        font-family: 'JetBrains Mono', monospace;
+      }
+
+      .dot {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 10.5px;
+        color: var(--ink-dim);
+        padding: 6px 10px;
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        transition: all .3s ease;
+        white-space: nowrap;
+      }
+
+      .dot b {
+        color: var(--ink-dim);
+        font-weight: 600;
+      }
+
+      .dot.active {
+        border-color: var(--yellow);
+        color: var(--ink);
+      }
+
+      .dot.active b {
+        color: var(--yellow);
+      }
+
+      .dot.done {
+        border-color: var(--yellow-dim);
+        color: var(--yellow-dim);
+      }
+
+      /* stage card */
+      .card {
+        background: var(--bg-soft);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 36px 28px;
+        margin-top: 28px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .card::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: repeating-linear-gradient(180deg, rgba(255, 255, 255, 0.015) 0px, rgba(255, 255, 255, 0.015) 1px, transparent 1px, transparent 3px);
+        pointer-events: none;
+      }
+
+      .stage-title {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 13px;
+        color: var(--yellow);
+        letter-spacing: 0.12em;
+        margin: 0 0 6px;
+        text-transform: uppercase;
+      }
+
+      .stage-desc {
+        font-size: 15px;
+        line-height: 1.75;
+        color: var(--ink);
+        margin: 0 0 26px;
+      }
+
+      .riddle {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 14px;
+        line-height: 2;
+        color: var(--ink-dim);
+        background: #0d0d0a;
+        border-left: 3px solid var(--yellow-dim);
+        padding: 16px 18px;
+        margin: 0 0 24px;
+        white-space: pre-wrap;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        -webkit-touch-callout: none;
+      }
+
+      input[type="text"] {
+        width: 100%;
+        background: #000;
+        border: 1px solid var(--line);
+        color: var(--ink);
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 15px;
+        padding: 14px 16px;
+        border-radius: 8px;
+        outline: none;
+        margin-bottom: 12px;
+        transition: border-color .2s;
+      }
+
+      input[type="text"]:focus {
+        border-color: var(--yellow);
+      }
+
+      button {
+        font-family: 'JetBrains Mono', monospace;
+        font-weight: 600;
+        font-size: 13px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        background: var(--yellow);
+        color: #000;
+        border: none;
+        padding: 13px 22px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: transform .12s ease, filter .12s ease;
+      }
+
+      button:hover {
+        filter: brightness(1.08);
+      }
+
+      button:active {
+        transform: scale(0.97);
+      }
+
+      button.ghost {
+        background: transparent;
+        color: var(--ink-dim);
+        border: 1px solid var(--line);
+      }
+
+      button.ghost:hover {
+        color: var(--ink);
+        border-color: var(--ink-dim);
+      }
+
+      button:disabled {
+        opacity: .35;
+        cursor: not-allowed;
+      }
+
+      .msg {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 12.5px;
+        margin-top: 12px;
+        min-height: 18px;
+      }
+
+      .msg.err {
+        color: var(--danger);
+      }
+
+      .msg.ok {
+        color: var(--yellow);
+      }
+
+      .row {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+
+      /* Simon */
+      .simon-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        max-width: 300px;
+        margin: 6px auto 22px;
+      }
+
+      .simon-btn {
+        aspect-ratio: 1;
+        border-radius: 12px;
+        background: #171712;
+        border: 1px solid var(--line);
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 26px;
+        color: var(--ink-dim);
+        cursor: pointer;
+        transition: all .08s ease;
+      }
+
+      .simon-btn.lit {
+        background: var(--yellow);
+        color: #000;
+        box-shadow: 0 0 30px rgba(243, 230, 0, 0.5);
+        transform: scale(1.03);
+      }
+
+      .simon-status {
+        text-align: center;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 13px;
+        color: var(--ink-dim);
+        margin-bottom: 6px;
+      }
+
+      .simon-status b {
+        color: var(--yellow);
+      }
+
+      /* Precision timing */
+      .track {
+        position: relative;
+        height: 54px;
+        background: #0d0d0a;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        margin: 8px 0 22px;
+        overflow: hidden;
+      }
+
+      .zone {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        background: rgba(243, 230, 0, 0.16);
+        border-left: 1px dashed var(--yellow-dim);
+        border-right: 1px dashed var(--yellow-dim);
+      }
+
+      .marker {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        background: var(--ink);
+      }
+
+      .marker.good {
+        background: var(--yellow);
+        box-shadow: 0 0 14px var(--yellow);
+      }
+
+      .marker.bad {
+        background: var(--danger);
+        box-shadow: 0 0 14px var(--danger);
+      }
+
+      .streak-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 12px;
+        color: var(--ink-dim);
+        margin-bottom: 8px;
+      }
+
+      .streak-row b {
+        color: var(--yellow);
+      }
+
+      /* Reaction gate */
+      .react-box {
+        height: 150px;
+        border-radius: 10px;
+        border: 1px solid var(--line);
+        background: #170d0d;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 16px;
+        color: var(--ink-dim);
+        letter-spacing: 0.08em;
+        margin: 6px 0 22px;
+        transition: background .12s ease;
+        user-select: none;
+        cursor: pointer;
+      }
+
+      .react-box.wait {
+        background: #1d0f0f;
+        color: var(--danger);
+      }
+
+      .react-box.go {
+        background: var(--yellow);
+        color: #000;
+        font-weight: 700;
+        font-size: 22px;
+        box-shadow: 0 0 40px rgba(243, 230, 0, 0.4);
+      }
+
+      /* Survival gate */
+      .arena {
+        position: relative;
+        height: 320px;
+        background: #0d0d0a;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        margin: 10px 0 22px;
+        overflow: hidden;
+        touch-action: none;
+      }
+
+      .arena-timer {
+        position: absolute;
+        top: 10px;
+        right: 14px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 12px;
+        color: var(--ink-dim);
+        z-index: 5;
+        letter-spacing: 0.03em;
+      }
+
+      .arena-timer b {
+        color: var(--yellow);
+      }
+
+      .arena-hint {
+        position: absolute;
+        top: 10px;
+        left: 14px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        color: var(--ink-dim);
+        opacity: .6;
+        z-index: 5;
+      }
+
+      .s5player {
+        position: absolute;
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: var(--yellow);
+        box-shadow: 0 0 16px rgba(243, 230, 0, 0.55);
+        top: calc(100% - 34px);
+        transform: translateX(-50%);
+        z-index: 3;
+      }
+
+      .s5obstacle {
+        position: absolute;
+        width: 16px;
+        height: 16px;
+        background: var(--danger);
+        border-radius: 3px;
+        box-shadow: 0 0 10px rgba(255, 77, 77, 0.55);
+        transform: translateX(-50%);
+        z-index: 2;
+      }
+
+      /* reveal */
+      .reveal {
+        text-align: center;
+        animation: fadein .6s ease;
+      }
+
+      @keyframes fadein {
+        from {
+          opacity: 0;
+          transform: translateY(8px);
+        }
+
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+
+      .reveal-frame {
+        position: relative;
+        display: inline-block;
+        padding: 18px;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: radial-gradient(ellipse at center, #14140d 0%, #0a0a0a 70%);
+        margin: 8px 0 24px;
+      }
+
+      .reveal-frame img {
+        display: block;
+        max-width: min(360px, 78vw);
+        width: 100%;
+        height: auto;
+        opacity: 0;
+        animation: reveal-in 1.4s ease forwards .15s;
+        filter: drop-shadow(0 0 40px rgba(243, 230, 0, 0.18));
+      }
+
+      @keyframes reveal-in {
+        0% {
+          opacity: 0;
+          transform: scale(0.85) blur(6px);
+        }
+
+        100% {
+          opacity: 1;
+          transform: scale(1) blur(0);
+        }
+      }
+
+      .reveal small {
+        display: block;
+        font-family: 'JetBrains Mono', monospace;
+        color: var(--ink-dim);
+        font-size: 12px;
+        margin-top: 10px;
+        letter-spacing: 0.05em;
+      }
+
+      footer {
+        text-align: center;
+        margin-top: 56px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        color: #444139;
+        letter-spacing: 0.08em;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation-duration: 0.01ms !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="wrap">
+
+      <header>
+        <div class="eyebrow">단편선 - 외전</div>
+        <h1>THE <span>TLQKF</span></h1>
+        <p class="sub">유다희 비키니 원본 짤은 다섯 개의 관문 뒤에 잠들어 있다.<br>실패하면 <b style="color:var(--yellow)">태초</b>로 되돌아간다. 힌트는
+          없다. 수고해라.</p>
+      </header>
+
+      <div class="progress" id="progress"></div>
+
+      <div id="stageHost"></div>
+
+      <footer>NO ZOMBIE HIGH SCHOOL</footer>
+    </div>
+
+    <script>
+      (function () {
+
+        const host = document.getElementById('stageHost');
+        const progressEl = document.getElementById('progress');
+        let stage = 1; // 1..5, then 'done'
+
+        const stages = [
+          {key: 1, label: '기억'},
+          {key: 2, label: '수수께끼'},
+          {key: 3, label: '찰나'},
+          {key: 4, label: '반응'},
+          {key: 5, label: '생존'},
+        ];
+
+        function renderProgress() {
+          progressEl.innerHTML = '';
+          stages.forEach(s => {
+            const d = document.createElement('div');
+            d.className = 'dot';
+            if (stage === 'done' || s.key < stage) d.className += ' done';
+            else if (s.key === stage) d.className += ' active';
+            d.innerHTML = `<b>0${s.key}</b> ${s.label}`;
+            progressEl.appendChild(d);
+          });
+        }
+
+        function goStage(n) {
+          stage = n;
+          renderProgress();
+          if (n === 1) renderStage1();
+          if (n === 2) renderStage2();
+          if (n === 3) renderStage3();
+          if (n === 4) renderStage4();
+          if (n === 5) renderStage5();
+          if (n === 'done') renderDone();
+        }
+
+        // 실패 시 공통 처리: 메시지를 잠깐 보여준 뒤 1번 문(태초)으로 이동
+        function failToStart(msgEl, text) {
+          msgEl.className = 'msg err';
+          msgEl.textContent = text;
+          setTimeout(() => goStage(1), 1100);
+        }
+
+        // ---------- GATE 1 : 기억의 문 (패턴 시퀀스) ----------
+        function renderStage1() {
+          const TARGET_LEN = 8;
+          const symbols = ['◆', '●', '▲', '■'];
+          let sequence = [];
+          let userIdx = 0;
+          let accepting = false;
+
+          host.innerHTML = `
+      <div class="card">
+        <div class="stage-title">첫번째 앨리스는 선홍의 검사</div>
+        <p class="stage-desc">문양이 순서대로 빛난다. 그 순서를 그대로 반복하라. ${TARGET_LEN}단계</b> 클리어 시, 다음 단계로 이동됨.</p>
+        <div class="simon-status" id="s1status">시작하려면 아래 버튼을 누르시오. 현재 단계: <b>0</b> / ${TARGET_LEN}</div>
+        <div class="simon-grid" id="simonGrid"></div>
+        <div class="row">
+          <button id="s1start">시작</button>
+        </div>
+        <div class="msg" id="s1msg"></div>
+      </div>
+    `;
+
+          const grid = document.getElementById('simonGrid');
+          const status = document.getElementById('s1status');
+          const msg = document.getElementById('s1msg');
+
+          symbols.forEach((sym, i) => {
+            const b = document.createElement('button');
+            b.className = 'simon-btn';
+            b.textContent = sym;
+            b.dataset.idx = i;
+            b.addEventListener('click', () => handlePress(i));
+            grid.appendChild(b);
+          });
+
+          function light(i, ms) {
+            return new Promise(res => {
+              const btn = grid.children[i];
+              btn.classList.add('lit');
+              setTimeout(() => {btn.classList.remove('lit'); res();}, ms);
+            });
+          }
+
+          async function playSequence() {
+            accepting = false;
+            status.innerHTML = `재생 중... 현재 단계: <b>${sequence.length}</b> / ${TARGET_LEN}`;
+            const speed = Math.max(75, 560 - sequence.length * 120);
+            await new Promise(r => setTimeout(r, 400));
+            for (const i of sequence) {
+              await light(i, speed);
+              await new Promise(r => setTimeout(r, speed * 0.35));
+            }
+            userIdx = 0;
+            accepting = true;
+            status.innerHTML = `당신 차례. 현재 단계: <b>${sequence.length}</b> / ${TARGET_LEN}`;
+          }
+
+          function nextRound() {
+            sequence.push(Math.floor(Math.random() * 4));
+            playSequence();
+          }
+
+          function handlePress(i) {
+            if (!accepting) return;
+            const btn = grid.children[i];
+            btn.classList.add('lit');
+            setTimeout(() => btn.classList.remove('lit'), 150);
+
+            if (sequence[userIdx] !== i) {
+              accepting = false;
+              msg.className = 'msg err';
+              msg.textContent = `✕ 틀렸다. ${sequence.length}단계에서 실패. 처음부터 다시.`;
+              sequence = [];
+              status.innerHTML = `현재 단계: <b>0</b> / ${TARGET_LEN}`;
+              return;
+            }
+            userIdx++;
+            if (userIdx === sequence.length) {
+              msg.className = 'msg ok';
+              msg.textContent = `✓ ${sequence.length}단계 통과.`;
+              if (sequence.length >= TARGET_LEN) {
+                accepting = false;
+                setTimeout(() => goStage(2), 600);
+                return;
+              }
+              setTimeout(nextRound, 700);
+            }
+          }
+
+          document.getElementById('s1start').addEventListener('click', () => {
+            sequence = [];
+            msg.textContent = '';
+            nextRound();
+          });
+        }
+
+        // ---------- GATE 2 : 수수께끼의 문 (20문 풀에서 1문 연속) ----------
+        const RIDDLE_POOL = [
+          {q: '커스텀 PVP 1에 등장하는 캐릭터 중, 가장 먼저 진윤 서버에 등장한 캐릭터는?\n1. 버서커\n2. 달의 전사\n3. 도박사\n4. 소드마스터', a: ['4']},
+          {q: '커스텀 PVP 2에서 가장 픽률이 높은 캐릭터는? (섭종전 기준)\n1. 거너\n2. 라이티\n3. 용기사\n4. 도박사', a: ['3']},
+          {q: '커스텀 PVP 2에서 가장 승률이 높은 캐릭터는? (섭종전 기준)\n1. 팔라딘\n2. 바드\n3. 생명의 정령\n4. 이클립서', a: ['2']},
+          {q: '커스텀 PVP(전체)에서 영과가 제작한 캐릭터 개수는? (메카닉 제외, 정식 캐릭터 한정)', a: ['13']},
+          {q: 'U가리의 생일ㅋ은? (ex: 01/01)', a: ['몰라', '시발 몰라', '시발몰라', '몰라 시발', 'ㅗ', '좆까', 'ㅈㄹ', '지랄', '쉬발', '몰라 쉬발', '몰라시발', '몰라쉬발', '쉬발몰라', '쉬발 몰라']},
+          {q: '빅우드 사복 메이드 인 빅토리안의 출시일은? (ex: 2020/01/01)', a: ['2024/07/11']},
+          {q: '가빈이 취향 개수(2026년 6월 기준)', a: ['35']},
+          {q: '기 ❗️ 습 ❗️ 볼 ❗️ 장 ❗️ 연 ❗️ 시 ❗️ 위 ❗️ 레 ❗️ 킹 ❗️ 볼 ❗️ 체 ❗️ 력 ❗️ 은 ❗️ 5 ❗️ 대 ❗️ 5 ❗️ 에 ❗️ 서 ❗️ 몇 ❗️ 일 ❗️ 까 ❗️', a: ['725']},
+          {q: '기 ❗️ 습 ❗️ 볼 ❗️ 장 ❗️ 연 ❗️ 시 ❗️ 위 ❗️ 레 ❗️ 킹 ❗️ 볼 ❗️ 체 ❗️ 력 ❗️ 은 ❗️ 6 ❗️ 대 ❗️ 6 ❗️ 에 ❗️ 서 ❗️ 몇 ❗️ 일 ❗️ 까 ❗️', a: ['550']},
+          {q: '나이순으로 정렬하시오 (높은게 가장 앞)\n1. 유다희\n2. U가리\n3. 로빈\n4. 에이스', a: ['2143']},
+          {q: '곽승제의 앵 - 그러게다 내수 서버 풀네임은? (2026년 6월 기준)', a: ['흐❗에❗엥❗곽❗슝❗좍❗네❗르❗지❗마❗세❗요❗좆❗같❗단❗말❗']},
+          {q: '단테의 노트에서 "홍루의 기억에서 보았던 공멸일의 날. 공씨 가문이 금기를 어긴 직후, 머리는 금기와 연관된 모든 것을 없애버렸다."\n는 어느 파트에 적혔을까?\n1. A사\n2. H사\n3. 홍원\n4. 구 H사', a: ['1']},
+          {q: '진윤 나오는 웹툰 근황 포럼에서 "게이"는 총 몇번 적혔는가? (2026년 7월 기준, 게1이 이런것도 포함)', a: ['10']},
+          {q: '좀비고등학교 - 노리미트 모드에 등장하는 직업군 개수', a: ['52']},
+          {q: 'reCAPTCHA:: 따라 적으시오: qpppqppqqqpppppqpqppqpqqpqq', a: ['qpppqppqqqpppppqpqppqpqqpqq']},
+          {q: 'reCAPTCHA:: 따라 적으시오: Isqk3%)1iqoda', a: ['Isqk3%)1iqoda']},
+          {q: '너는 게이입니까? (예/아니오)', a: ['예']},
+          {q: 'คำว่า "ขอบคุณ" มีความหมายว่าอะไร?\n1. 안녕하세요\n2. 감사합니다\n3. 미안해요\n4. 잘가요', a: ['2']},
+          {q: 'Question\n\nA 34-year-old woman presents with progressive fatigue, intermittent low-grade fever, arthralgia, and painless oral ulcers over the past four months. Laboratory studies reveal normocytic anemia, leukopenia, proteinuria (1.8 g/day), positive antinuclear antibodies (ANA), high anti-double-stranded DNA antibody titers, and decreased serum complement (C3 and C4) levels. Renal biopsy demonstrates diffuse proliferative glomerulonephritis with subendothelial immune complex deposition.\n\nWhich of the following immunopathogenic mechanisms is primarily responsible for this patient\'s renal disease?\n\n1. IgE-mediated mast cell degranulation following allergen cross-linking\n\n2. Cytotoxic T-lymphocyte-mediated apoptosis of podocytes\n\n3. Deposition of circulating antigen-antibody immune complexes with complement activation\n\n4. Autoantibody-mediated destruction of glomerular basement membrane via type II hypersensitivity\n\n5. Granulomatous inflammation driven predominantly by Th1 macrophage activation', a: ['3']},
+          {q: '자연수 n에 대하여 n^2+2 가 n+1의 배수가 되도록 하는 모든 자연수 n의 합을 구하여라.', a: ['4']},
+        ];
+
+        function renderStage2() {
+          const NEED = 1;
+          const TIME_LIMIT_MS = 10000;
+          // 20개 풀에서 중복 없이 NEED개 무작위 추출
+          const shuffled = [...RIDDLE_POOL].sort(() => Math.random() - 0.5);
+          const picked = shuffled.slice(0, NEED);
+          let idx = 0;
+          let deadline = 0;
+          let tickRaf = null;
+          let finished = false;
+
+          host.innerHTML = `
+      <div class="card">
+        <div class="stage-title">두번째 앨리스는 눈물의 요정이라곶옺옺옺ㅎ</div>
+        <p class="stage-desc">답은 오직 숫자 1개로. 버튼을 누르면 문제가 나오며, 제한시간 <b style="color:var(--yellow)">${(TIME_LIMIT_MS / 1000) | 0}초</b> 안에 정답을 입력하지 못하면 <b style="color:var(--yellow)">태초</b>로 돌아간다.</p>
+        <div class="streak-row"><span>진행</span><span><b id="s2progress">0</b> / ${NEED}</span></div>
+        <div class="streak-row"><span>남은 시간</span><span><b id="s2timer">${(TIME_LIMIT_MS / 1000).toFixed(1)}</b>s</span></div>
+        <div class="riddle" id="s2riddle" style="display:none;"></div>
+        <input type="text" id="s2input" placeholder="답을 입력하시오" autocomplete="off" spellcheck="false" style="display:none;">
+        <div class="row">
+          <button id="s2start">문제 시작</button>
+          <button id="s2submit" style="display:none;">제출</button>
+        </div>
+        <div class="msg" id="s2msg"></div>
+      </div>
+    `;
+
+          const riddleEl = document.getElementById('s2riddle');
+          ['copy', 'cut', 'contextmenu', 'dragstart', 'selectstart'].forEach(evt => {
+            riddleEl.addEventListener(evt, e => e.preventDefault());
+            
+          });
+          const progEl = document.getElementById('s2progress');
+          const timerEl = document.getElementById('s2timer');
+          const input = document.getElementById('s2input');
+          const msg = document.getElementById('s2msg');
+          const startBtn = document.getElementById('s2start');
+          const submitBtn = document.getElementById('s2submit');
+
+          function stopTick() {
+            if (tickRaf) cancelAnimationFrame(tickRaf);
+            tickRaf = null;
+          }
+
+          function tick() {
+            if (finished) return;
+            const remain = deadline - performance.now();
+            if (remain <= 0) {
+              timerEl.textContent = '0.0';
+              finished = true;
+              stopTick();
+              failToStart(msg, '✕ 시간 초과. 태초로 돌아간다.');
+              return;
+            }
+            timerEl.textContent = (remain / 1000).toFixed(1);
+            tickRaf = requestAnimationFrame(tick);
+          }
+
+          function beginRound() {
+            startBtn.style.display = 'none';
+            submitBtn.style.display = '';
+            riddleEl.style.display = '';
+            input.style.display = '';
+            riddleEl.textContent = picked[idx].q;
+            progEl.textContent = idx;
+            input.value = '';
+            msg.textContent = '';
+            input.focus();
+            deadline = performance.now() + TIME_LIMIT_MS;
+            timerEl.textContent = (TIME_LIMIT_MS / 1000).toFixed(1);
+            stopTick();
+            tickRaf = requestAnimationFrame(tick);
+          }
+
+          function check() {
+            if (finished) return;
+            const v = input.value.trim().toLowerCase().replace(/\s/g, '');
+            if (v.length === 0) {
+              msg.className = 'msg err';
+              msg.textContent = '답을 입력하시오.';
+              return;
+            }
+            const answers = picked[idx].a.map(a => a.toLowerCase());
+            if (answers.includes(v)) {
+              finished = true;
+              stopTick();
+              idx++;
+              progEl.textContent = idx;
+              if (idx >= NEED) {
+                msg.className = 'msg ok';
+                msg.textContent = `✓ 정답이다 연금술사!`;
+                setTimeout(() => goStage(3), 700);
+                return;
+              }
+              msg.className = 'msg ok';
+              msg.textContent = '✓ 정답.';
+              setTimeout(() => {finished = false; beginRound();}, 500);
+            } else {
+              finished = true;
+              stopTick();
+              failToStart(msg, `✕ 병신을 만들어주마`);
+            }
+          }
+
+          startBtn.addEventListener('click', beginRound);
+          submitBtn.addEventListener('click', check);
+          input.addEventListener('keydown', e => {if (e.key === 'Enter') check();});
+        }
+
+        // ---------- GATE 3 : 찰나의 문 (정밀 타이밍) ----------
+        function renderStage3() {
+          const NEED_STREAK = 4;
+          let streak = 0;
+          let raf = null;
+          let pos = 0;
+          let dir = 1;
+          let speed = 0.9;
+          let zoneStart = 40, zoneWidth = 20;
+          let running = false;
+          let locked = false;
+
+          host.innerHTML = `
+      <div class="card">
+        <div class="stage-title">세 번째 앨리스는 놓지마 정신줄 정신차려번쩍정신차려번쩍시그마봄예시그마봄예찌릿찌릿찌릿찔시</div>
+        <p class="stage-desc">막대가 좌우로 움직인다. 표시된 구간 안에 있을 때 정확히 멈춰라. <b style="color:var(--yellow)">연속 ${NEED_STREAK}회</b> 성공해야 문이 열리며, 한 번이라도 실패하면 <b style="color:var(--yellow)">태초</b>로 돌아간다. 성공할수록 구간은 좁아지고 속도는 빨라진다.</p>
+        <div class="streak-row"><span>연속 성공</span><span><b id="streakVal">0</b> / ${NEED_STREAK}</span></div>
+        <div class="track" id="track">
+          <div class="zone" id="zone"></div>
+          <div class="marker" id="marker"></div>
+        </div>
+        <div class="row">
+          <button id="s3start">움직임 시작</button>
+          <button id="s3stop" disabled>STOP!</button>
+        </div>
+        <div class="msg" id="s3msg"></div>
+      </div>
+    `;
+
+          const zoneEl = document.getElementById('zone');
+          const markerEl = document.getElementById('marker');
+          const streakEl = document.getElementById('streakVal');
+          const msg = document.getElementById('s3msg');
+          const startBtn = document.getElementById('s3start');
+          const stopBtn = document.getElementById('s3stop');
+
+          function newRound() {
+            zoneWidth = Math.max(6, 20 - streak * 2.2);
+            zoneStart = Math.random() * (100 - zoneWidth);
+            zoneEl.style.left = zoneStart + '%';
+            zoneEl.style.width = zoneWidth + '%';
+            speed = Math.min(2.6, 0.9 + streak * 0.28);
+            pos = Math.random() * 100;
+            dir = Math.random() < 0.5 ? 1 : -1;
+            markerEl.classList.remove('good', 'bad');
+            markerEl.style.left = pos + '%';
+          }
+
+          function tick() {
+            pos += dir * speed;
+            if (pos >= 100) {pos = 100; dir = -1;}
+            if (pos <= 0) {pos = 0; dir = 1;}
+            markerEl.style.left = pos + '%';
+            raf = requestAnimationFrame(tick);
+          }
+
+          function start() {
+            newRound();
+            running = true;
+            locked = false;
+            startBtn.disabled = true;
+            stopBtn.disabled = false;
+            msg.textContent = '';
+            raf = requestAnimationFrame(tick);
+          }
+
+          function stopAttempt() {
+            if (!running || locked) return;
+            locked = true;
+            cancelAnimationFrame(raf);
+            const inZone = pos >= zoneStart && pos <= zoneStart + zoneWidth;
+            if (inZone) {
+              streak++;
+              markerEl.classList.add('good');
+              streakEl.textContent = streak;
+              msg.className = 'msg ok';
+              msg.textContent = `✓ 명중. (${streak}/${NEED_STREAK})`;
+              if (streak >= NEED_STREAK) {
+                running = false;
+                stopBtn.disabled = true;
+                setTimeout(() => goStage(4), 700);
+                return;
+              }
+              running = false;
+              startBtn.disabled = false;
+              stopBtn.disabled = true;
+              setTimeout(() => {startBtn.textContent = '다음 라운드';}, 10);
+            } else {
+              markerEl.classList.add('bad');
+              stopBtn.disabled = true;
+              failToStart(msg, '✕ 빗나감. 태초로 돌아간다.');
+            }
+          }
+
+          startBtn.addEventListener('click', start);
+          stopBtn.addEventListener('click', stopAttempt);
+          document.addEventListener('keydown', function spaceHandler(e) {
+            if (e.code === 'Space' && document.body.contains(stopBtn)) {
+              e.preventDefault();
+              if (!stopBtn.disabled) stopAttempt();
+            }
+          });
+        }
+
+        // ---------- GATE 4 : 반응의 문 (반응 속도) ----------
+        function renderStage4() {
+          const NEED = 3;
+          const THRESHOLD = 300; // ms
+          let streak = 0;
+          let phase = 'idle'; // idle | waiting | go | done
+          let goTime = 0;
+          let waitTimer = null;
+
+          host.innerHTML = `
+      <div class="card">
+        <div class="stage-title">나 4번째 앨리스 몰라 쉬발</div>
+        <p class="stage-desc">박스가 <b style="color:var(--yellow)">노란색</b>으로 바뀌는 순간 즉시 눌러라. 바뀌기 전에 누르거나, <b style="color:var(--yellow)">${THRESHOLD}ms</b>보다 느리게 반응하면 <b style="color:var(--yellow)">태초</b>로 돌아간다. <b style="color:var(--yellow)">${NEED}회</b> 연속 성공해야 문이 열린다.</p>
+        <div class="streak-row"><span>연속 성공</span><span><b id="s4streak">0</b> / ${NEED}</span></div>
+        <div class="react-box" id="reactBox">준비되면 아래 버튼을 누르시오</div>
+        <div class="row">
+          <button id="s4start">라운드 시작</button>
+        </div>
+        <div class="msg" id="s4msg"></div>
+      </div>
+    `;
+
+          const box = document.getElementById('reactBox');
+          const streakEl = document.getElementById('s4streak');
+          const msg = document.getElementById('s4msg');
+          const startBtn = document.getElementById('s4start');
+
+          function startRound() {
+            phase = 'waiting';
+            startBtn.disabled = true;
+            msg.textContent = '';
+            box.className = 'react-box wait';
+            box.textContent = '기다려라...';
+            const delay = 200 + Math.random() * 5000;
+            waitTimer = setTimeout(() => {
+              phase = 'go';
+              goTime = performance.now();
+              box.className = 'react-box go';
+              box.textContent = '지금!';
+            }, delay);
+          }
+
+          function handleTap() {
+            if (phase === 'idle' || phase === 'done') return;
+            if (phase === 'waiting') {
+              clearTimeout(waitTimer);
+              failToStart(msg, '✕ 너무 빨랐습니다 관리자님. 미쳤나보군.');
+              phase = 'done';
+              box.className = 'react-box';
+              box.textContent = '실패';
+              return;
+            }
+            if (phase === 'go') {
+              const elapsed = performance.now() - goTime;
+              if (elapsed <= THRESHOLD) {
+                streak++;
+                streakEl.textContent = streak;
+                box.className = 'react-box';
+                box.textContent = `${Math.round(elapsed)}ms`;
+                if (streak >= NEED) {
+                  phase = 'done';
+                  msg.className = 'msg ok';
+                  msg.textContent = '✓ 문이 열린다.';
+                  setTimeout(() => goStage(5), 700);
+                  return;
+                }
+                msg.className = 'msg ok';
+                msg.textContent = `✓ 성공 (${Math.round(elapsed)}ms). 다음 라운드를 시작하라.`;
+                phase = 'idle';
+                startBtn.disabled = false;
+              } else {
+                phase = 'done';
+                box.className = 'react-box';
+                box.textContent = `${Math.round(elapsed)}ms`;
+                failToStart(msg, `✕ 너무 느렸다 (${Math.round(elapsed)}ms). 태초로 돌아간다.`);
+              }
+            }
+          }
+
+          startBtn.addEventListener('click', startRound);
+          box.addEventListener('click', handleTap);
+          document.addEventListener('keydown', function spaceHandler(e) {
+            if (e.code === 'Space' && document.body.contains(box)) {
+              e.preventDefault();
+              handleTap();
+            }
+          });
+        }
+
+        // ---------- GATE 5 : 최후의 문 (파편 회피 생존) ----------
+        function renderStage5() {
+          const SURVIVE_MS = 14000; // 생존 목표 시간
+          let running = false;
+          let startTime = 0;
+          let lastFrame = 0;
+          let raf = null;
+          let obstacles = [];
+          let spawnTimer = 0;
+          let playerX = 50; // %
+
+          host.innerHTML = `
+      <div class="card">
+        <div class="stage-title">5번째 앨리스는 김재원의 오버워치 메이코패스</div>
+        <p class="stage-desc">죽거1나 죽1이거나야 ! ! ! ! 아래 구역에서 <b style="color:var(--yellow)">${(SURVIVE_MS / 1000) | 0}초</b>간 떨어지는 파편을 피해 살아남아라. <b style="color:var(--yellow)">단 한 번</b>이라도 스치면 즉시 <b style="color:var(--yellow)">태초</b>로 돌아간다. 마우스(또는 터치, 좌우 화살표)로 아래 점을 움직여라. 시간이 지날수록 빨라진다.</p>
+        <div class="arena" id="s5arena">
+          <div class="arena-hint">MOVE TO DODGE</div>
+          <div class="arena-timer" id="s5timer">0.0 / ${(SURVIVE_MS / 1000).toFixed(1)}s</div>
+          <div class="s5player" id="s5player"></div>
+        </div>
+        <div class="row">
+          <button id="s5start">생존 시작</button>
+        </div>
+        <div class="msg" id="s5msg"></div>
+      </div>
+    `;
+
+          const arena = document.getElementById('s5arena');
+          const player = document.getElementById('s5player');
+          const timerEl = document.getElementById('s5timer');
+          const msg = document.getElementById('s5msg');
+          const startBtn = document.getElementById('s5start');
+
+          function setPlayerX(pct) {
+            playerX = Math.max(2, Math.min(98, pct));
+            player.style.left = playerX + '%';
+          }
+          setPlayerX(15);
+
+          function pointerMove(clientX) {
+            if (!running) return;
+            const rect = arena.getBoundingClientRect();
+            setPlayerX(((clientX - rect.left) / rect.width) * 100);
+          }
+
+          function mouseHandler(e) {pointerMove(e.clientX);}
+          function touchHandler(e) {
+            if (e.touches[0]) pointerMove(e.touches[0].clientX);
+            e.preventDefault();
+          }
+          function keyHandler(e) {
+            if (!running) return;
+            if (e.key === 'ArrowLeft') setPlayerX(playerX - 4);
+            if (e.key === 'ArrowRight') setPlayerX(playerX + 4);
+          }
+
+          arena.addEventListener('mousemove', mouseHandler);
+          arena.addEventListener('touchmove', touchHandler, {passive: false});
+
+          function clearObstacles() {
+            obstacles.forEach(o => o.el.remove());
+            obstacles = [];
+          }
+
+          function spawnObstacle() {
+            const el = document.createElement('div');
+            el.className = 's5obstacle';
+            const x = 3 + Math.random() * 94;
+            el.style.left = x + '%';
+            el.style.top = '-18px';
+            arena.appendChild(el);
+            obstacles.push({el, y: -18});
+          }
+
+          function endLoop() {
+            running = false;
+            if (raf) cancelAnimationFrame(raf);
+            document.removeEventListener('keydown', keyHandler);
+          }
+
+          function fail() {
+            endLoop();
+            clearObstacles();
+            failToStart(msg, '✕ 뭐랭; 너나 잘행ㅋ.');
+          }
+
+          function loop(ts) {
+            if (!running) return;
+            if (!lastFrame) lastFrame = ts;
+            const dt = ts - lastFrame;
+            lastFrame = ts;
+            const elapsed = ts - startTime;
+            const progress = Math.min(1, elapsed / SURVIVE_MS);
+
+            timerEl.innerHTML = `${(elapsed / 1000).toFixed(1)} / ${(SURVIVE_MS / 1000).toFixed(1)}s`;
+
+            if (elapsed >= SURVIVE_MS) {
+              endLoop();
+              clearObstacles();
+              msg.className = 'msg ok';
+              msg.textContent = '✓ 살아남았다.';
+              setTimeout(() => goStage('done'), 700);
+              return;
+            }
+
+            spawnTimer -= dt;
+            const spawnInterval = Math.max(1, 620 - progress * 690);
+            if (spawnTimer <= 0) {
+              spawnObstacle();
+              spawnTimer = spawnInterval;
+            }
+
+            const fallSpeed = 0.085 + progress * 0.35; // px per ms
+            const arenaRect = arena.getBoundingClientRect();
+            const playerRect = player.getBoundingClientRect();
+
+            for (let i = obstacles.length - 1; i >= 0; i--) {
+              const o = obstacles[i];
+              o.y += fallSpeed * dt;
+              o.el.style.top = o.y + 'px';
+
+              if (o.y > arenaRect.height + 20) {
+                o.el.remove();
+                obstacles.splice(i, 1);
+                continue;
+              }
+
+              const oRect = o.el.getBoundingClientRect();
+              const hit = !(oRect.right < playerRect.left + 3 ||
+                oRect.left > playerRect.right - 3 ||
+                oRect.bottom < playerRect.top + 3 ||
+                oRect.top > playerRect.bottom - 3);
+              if (hit) {fail(); return;}
+            }
+
+            raf = requestAnimationFrame(loop);
+          }
+
+          function start() {
+            clearObstacles();
+            running = true;
+            lastFrame = 0;
+            spawnTimer = 0;
+            startTime = performance.now();
+            startBtn.disabled = true;
+            msg.textContent = '';
+            document.addEventListener('keydown', keyHandler);
+            raf = requestAnimationFrame(loop);
+          }
+
+          startBtn.addEventListener('click', start);
+        }
+
+        // ---------- DONE ----------
+        function renderDone() {
+          host.innerHTML = `
+      <div class="card reveal">
+        <div class="stage-title">ALL GATES — Passed</div>
+        <p class="stage-desc">다섯 개의 문이 모두 열렸다. 봉인이 마지막 한 겹만을 남기고 풀려나려 한다.<br>버튼을 눌러 형상을 마주하라.</p>
+        <div class="row" style="justify-content:center; margin-bottom:8px;">
+          <button id="revealBtn">형상 마주하기</button>
+        </div>
+        <div id="revealHost"></div>
+      </div>
+    `;
+
+          document.getElementById('revealBtn').addEventListener('click', function () {
+            document.getElementById('revealHost').innerHTML = `
+        <div class="reveal-frame">
+          <img src="creature.png" alt="옛다 봐라 걍 쉬발">
+        </div>
+        <small>UNSEALED · ${new Date().toLocaleDateString('ko-KR')}</small>
+      `;
+            this.style.display = 'none';
+          });
+        }
+
+        renderProgress();
+        goStage(1);
+      })();
+    </script>
+  </body>
+
+  </html>
